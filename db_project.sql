@@ -1,4 +1,3 @@
--- DROP SCHEMA db_project;
 DROP DATABASE IF EXISTS db_project;
 CREATE DATABASE  db_project;
 USE db_project; 
@@ -232,7 +231,6 @@ CALL find_video('hard of hearing');
 
 -- 8 Триггер
 DROP TRIGGER IF EXISTS`delete_users`;
-
 DELIMITER //
 CREATE TRIGGER `delete_users`
 AFTER DELETE ON `Users`
@@ -259,6 +257,20 @@ FROM Annotation;
 SELECT *
 FROM Users;
 
+-- 9 VIEW
+-- сбор всех аннтоций видео
+DROP VIEW IF EXISTS video_annotations;
+DELIMITER //
+CREATE VIEW video_annotations AS
+SELECT V.name,  GROUP_CONCAT(sign_lang), GROUP_CONCAT(gloss), GROUP_CONCAT(translation)
+FROM Videos AS V
+JOIN Fragments  AS F
+ON V.video_id = F.video_id
+JOIN Annotation AS A
+ON F.fragment_id = A.fragment_id
+GROUP BY V.name//
 
+SELECT *
+FROM video_annotations;
 
 
